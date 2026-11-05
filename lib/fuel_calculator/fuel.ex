@@ -1,4 +1,12 @@
 defmodule FuelCalculator.Fuel do
+  @moduledoc """
+  Calculates the fuel a journey needs.
+
+  A launch burns `mass * gravity * 0.042 - 33` kg and a landing burns
+  `mass * gravity * 0.033 - 42` kg, both rounded down. Fuel adds weight, so it needs
+  fuel too, until the extra amount reaches zero or below.
+  """
+
   alias FuelCalculator.Journey
 
   @launch_coeff 0.042
@@ -10,6 +18,11 @@ defmodule FuelCalculator.Fuel do
            {mass :: pos_integer(), gravity :: float(), coeff :: float(), const :: pos_integer()}
   @typep fuel_formula :: (mass :: number() -> fuel :: float())
 
+  @doc """
+  Returns the total fuel in kg for `journey`.
+
+  Calculates any sequence of steps, so checking that a path makes sense is up to the caller.
+  """
   @spec required_journey_fuel(Journey.t()) :: non_neg_integer()
   def required_journey_fuel(journey) do
     journey
@@ -31,6 +44,7 @@ defmodule FuelCalculator.Fuel do
   defp resolve_type(:landing), do: {@landing_coeff, @landing_const}
 
   @spec apply_calc([step_params()]) :: number()
+  # last step first: each step also carries the fuel burned by the steps after it
   defp apply_calc(processed_journey) do
     apply_calc(Enum.reverse(processed_journey), 0)
   end
@@ -60,6 +74,7 @@ defmodule FuelCalculator.Fuel do
     additional_fuel(f, [additional | all_fuel])
   end
 
+  # the last value is zero or negative, so it doesn't count
   defp additional_fuel(_f, [fuel | all_fuel]) when fuel <= 0 do
     all_fuel
   end
