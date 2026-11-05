@@ -75,14 +75,10 @@ defmodule FuelCalculatorWeb.JourneyComponents do
     ~H"""
     <div
       id={"step-#{@row.id}"}
-      class="flex items-start gap-2 rounded-box border border-base-300 bg-base-100 p-3 sm:gap-3"
-      phx-mounted={
-        JS.transition(
-          {"ease-out duration-200", "opacity-0 -translate-y-1", "opacity-100 translate-y-0"}
-        )
-      }
+      class="flex items-start gap-2 rounded-box border border-base-300 bg-base-100 px-3 pt-3 pb-1 sm:gap-3"
+      phx-mounted={row_mounted(@row)}
     >
-      <span class="badge badge-neutral badge-sm mt-2 w-7 shrink-0">{@position}</span>
+      <span class="badge badge-neutral badge-sm mt-3 w-7 shrink-0">{@position}</span>
 
       <div class="min-w-0 flex-1">
         <div class="grid gap-x-3 sm:grid-cols-2">
@@ -114,7 +110,7 @@ defmodule FuelCalculatorWeb.JourneyComponents do
       <button
         type="button"
         id={"remove-step-#{@row.id}"}
-        class="btn btn-ghost btn-sm btn-square shrink-0"
+        class="btn btn-ghost btn-sm btn-square mt-2 shrink-0"
         phx-click="remove_step"
         phx-value-id={@row.id}
         aria-label={"Remove step #{@position}"}
@@ -135,7 +131,7 @@ defmodule FuelCalculatorWeb.JourneyComponents do
     <section
       id="total-fuel"
       aria-live="polite"
-      class="stats sticky bottom-4 z-10 w-full border border-base-300 bg-base-100 shadow-lg"
+      class="stats sticky top-2 z-10 w-full border border-base-300 bg-base-100 shadow-md"
     >
       <div class="stat">
         <div class="stat-title">Total fuel required</div>
@@ -152,5 +148,16 @@ defmodule FuelCalculatorWeb.JourneyComponents do
       </div>
     </section>
     """
+  end
+
+  # rows only mount blank when added by hand: focusing one scrolls it into view
+  @spec row_mounted(JourneyForm.row()) :: JS.t()
+  defp row_mounted(row) do
+    entry =
+      JS.transition(
+        {"ease-out duration-200", "opacity-0 -translate-y-1", "opacity-100 translate-y-0"}
+      )
+
+    if row.step, do: entry, else: JS.focus(entry, to: "##{row.form[:action].id}")
   end
 end

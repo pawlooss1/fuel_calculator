@@ -63,6 +63,8 @@ defmodule FuelCalculatorWeb.JourneyLive do
         <:subtitle>Build a flight path and see how much fuel it needs.</:subtitle>
       </.header>
 
+      <.fuel_total fuel={@fuel} hint={@hint} />
+
       <div class="card border border-base-300 bg-base-200">
         <div class="card-body gap-2">
           <%!-- a new DOM id resets the select: LiveView won't overwrite a focused one --%>
@@ -75,14 +77,12 @@ defmodule FuelCalculatorWeb.JourneyLive do
           <div class="divider my-1"></div>
 
           <.form for={@form} id="journey-form" phx-change="change" phx-submit="change">
+            <%!-- not type="number": LiveView skips change events on bad input like "5-", which would leave a stale total --%>
             <.input
               field={@form[:mass]}
-              type="number"
+              type="text"
               label="Spacecraft mass (kg)"
               placeholder="28801"
-              min="1"
-              max={Journey.max_mass()}
-              step="1"
               inputmode="numeric"
               autocomplete="off"
             />
@@ -90,8 +90,6 @@ defmodule FuelCalculatorWeb.JourneyLive do
           </.form>
         </div>
       </div>
-
-      <.fuel_total fuel={@fuel} hint={@hint} />
     </Layouts.app>
     """
   end
