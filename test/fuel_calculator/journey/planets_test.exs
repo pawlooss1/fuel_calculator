@@ -18,6 +18,7 @@ defmodule FuelCalculator.Journey.PlanetsTest do
 
     test "raises for an unknown planet" do
       # apply/3 stops the type checker flagging this deliberate bad call
+      # credo:disable-for-next-line Credo.Check.Refactor.Apply
       assert_raise FunctionClauseError, fn -> apply(Planets, :gravity, [:pluto]) end
     end
   end
