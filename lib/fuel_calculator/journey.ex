@@ -55,7 +55,7 @@ defmodule FuelCalculator.Journey do
   @spec apollo_11_mission() :: t()
   def apollo_11_mission do
     %__MODULE__{
-      mass: 28801,
+      mass: 28_801,
       steps: [
         {:launch, :earth},
         {:landing, :moon},
@@ -69,7 +69,7 @@ defmodule FuelCalculator.Journey do
   @spec mars_mission() :: t()
   def mars_mission do
     %__MODULE__{
-      mass: 14606,
+      mass: 14_606,
       steps: [
         {:launch, :earth},
         {:landing, :mars},
@@ -83,7 +83,7 @@ defmodule FuelCalculator.Journey do
   @spec passenger_ship_mission() :: t()
   def passenger_ship_mission do
     %__MODULE__{
-      mass: 75432,
+      mass: 75_432,
       steps: [
         {:launch, :earth},
         {:landing, :moon},
